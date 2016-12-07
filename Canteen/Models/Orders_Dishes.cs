@@ -15,8 +15,8 @@ namespace Canteen.Models
     public partial class Orders_Dishes
     {
         public long Id { get; set; }
-        public long OrderId { get; set; }
-        public long DishId { get; set; }
+        public long Order_Id { get; set; }
+        public long Dish_Id { get; set; }
     
         public virtual Dish Dish { get; set; }
         public virtual Order Order { get; set; }

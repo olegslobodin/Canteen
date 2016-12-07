@@ -20,13 +20,13 @@ namespace Canteen.Models
             this.Orders_Dishes = new HashSet<Orders_Dishes>();
         }
     
-        public long Id { get; set; }
-        public Nullable<long> StudentId { get; set; }
+        public long id { get; set; }
+        public string UserId { get; set; }
         public System.DateTime Date { get; set; }
         public decimal Price { get; set; }
     
+        public virtual AspNetUser AspNetUser { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Orders_Dishes> Orders_Dishes { get; set; }
-        public virtual Student Student { get; set; }
     }
 }

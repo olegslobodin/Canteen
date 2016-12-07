@@ -12,13 +12,13 @@ namespace Canteen.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Students_Benefits
+    public partial class Users_Benefits
     {
         public long Id { get; set; }
-        public long StudentId { get; set; }
-        public long BenefitId { get; set; }
+        public string User_Id { get; set; }
+        public long Benefit_Id { get; set; }
     
+        public virtual AspNetUser AspNetUser { get; set; }
         public virtual Benefit Benefit { get; set; }
-        public virtual Student Student { get; set; }
     }
 }

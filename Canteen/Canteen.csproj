@@ -170,13 +170,16 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\DishesController.cs" />
+    <Compile Include="Controllers\DishesController_old.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\AspNetUser.cs">
+      <DependentUpon>CanteenModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\Benefit.cs">
       <DependentUpon>CanteenModel.tt</DependentUpon>
     </Compile>
@@ -212,10 +215,7 @@
     <Compile Include="Models\Product.cs">
       <DependentUpon>CanteenModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\Student.cs">
-      <DependentUpon>CanteenModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="Models\Students_Benefits.cs">
+    <Compile Include="Models\Users_Benefits.cs">
       <DependentUpon>CanteenModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\Worker.cs">

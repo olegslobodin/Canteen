@@ -12,24 +12,37 @@ namespace Canteen.Models
     using System;
     using System.Collections.Generic;
     
-    public partial class Student
+    public partial class AspNetUser
     {
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
-        public Student()
+        public AspNetUser()
         {
             this.Orders = new HashSet<Order>();
-            this.Students_Benefits = new HashSet<Students_Benefits>();
+            this.Users_Benefits = new HashSet<Users_Benefits>();
         }
     
-        public long Id { get; set; }
-        public decimal Budget { get; set; }
+        public string Id { get; set; }
+        public string Email { get; set; }
+        public bool EmailConfirmed { get; set; }
+        public string PasswordHash { get; set; }
+        public string SecurityStamp { get; set; }
+        public string PhoneNumber { get; set; }
+        public bool PhoneNumberConfirmed { get; set; }
+        public bool TwoFactorEnabled { get; set; }
+        public Nullable<System.DateTime> LockoutEndDateUtc { get; set; }
+        public bool LockoutEnabled { get; set; }
+        public int AccessFailedCount { get; set; }
+        public string UserName { get; set; }
+        public Nullable<decimal> Budget { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string MiddleName { get; set; }
     
+        public virtual AspNetUser AspNetUsers1 { get; set; }
+        public virtual AspNetUser AspNetUser1 { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<Order> Orders { get; set; }
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Students_Benefits> Students_Benefits { get; set; }
+        public virtual ICollection<Users_Benefits> Users_Benefits { get; set; }
     }
 }

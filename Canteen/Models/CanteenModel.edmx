@@ -5,6 +5,27 @@
     <!-- SSDL content -->
     <edmx:StorageModels>
       <Schema Namespace="CanteenModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012.Azure" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="AspNetUsers">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="Email" Type="nvarchar" MaxLength="256" />
+          <Property Name="EmailConfirmed" Type="bit" Nullable="false" />
+          <Property Name="PasswordHash" Type="nvarchar(max)" />
+          <Property Name="SecurityStamp" Type="nvarchar(max)" />
+          <Property Name="PhoneNumber" Type="nvarchar(max)" />
+          <Property Name="PhoneNumberConfirmed" Type="bit" Nullable="false" />
+          <Property Name="TwoFactorEnabled" Type="bit" Nullable="false" />
+          <Property Name="LockoutEndDateUtc" Type="datetime" />
+          <Property Name="LockoutEnabled" Type="bit" Nullable="false" />
+          <Property Name="AccessFailedCount" Type="int" Nullable="false" />
+          <Property Name="UserName" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="Budget" Type="decimal" Precision="18" Scale="0" />
+          <Property Name="FirstName" Type="nvarchar" MaxLength="50" />
+          <Property Name="LastName" Type="nvarchar" MaxLength="50" />
+          <Property Name="MiddleName" Type="nvarchar" MaxLength="50" />
+        </EntityType>
         <EntityType Name="Benefits">
           <Key>
             <PropertyRef Name="Id" />
@@ -32,10 +53,10 @@
         </EntityType>
         <EntityType Name="Orders">
           <Key>
-            <PropertyRef Name="Id" />
+            <PropertyRef Name="id" />
           </Key>
-          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="StudentId" Type="bigint" />
+          <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="UserId" Type="nvarchar" MaxLength="256" Nullable="false" />
           <Property Name="Date" Type="date" Nullable="false" />
           <Property Name="Price" Type="decimal" Precision="18" Scale="0" Nullable="false" />
         </EntityType>
@@ -44,8 +65,8 @@
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="OrderId" Type="bigint" Nullable="false" />
-          <Property Name="DishId" Type="bigint" Nullable="false" />
+          <Property Name="Order_Id" Type="bigint" Nullable="false" />
+          <Property Name="Dish_Id" Type="bigint" Nullable="false" />
         </EntityType>
         <EntityType Name="Products">
           <Key>
@@ -55,23 +76,13 @@
           <Property Name="Title" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="EnergyValue" Type="decimal" Precision="18" Scale="0" />
         </EntityType>
-        <EntityType Name="Students">
+        <EntityType Name="Users_Benefits">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="Budget" Type="decimal" Precision="18" Scale="0" Nullable="false" />
-          <Property Name="FirstName" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="LastName" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="MiddleName" Type="nvarchar" MaxLength="50" />
-        </EntityType>
-        <EntityType Name="Students_Benefits">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
-          <Property Name="StudentId" Type="bigint" Nullable="false" />
-          <Property Name="BenefitId" Type="bigint" Nullable="false" />
+          <Property Name="User_Id" Type="nvarchar" MaxLength="256" Nullable="false" />
+          <Property Name="Benefit_Id" Type="bigint" Nullable="false" />
         </EntityType>
         <EntityType Name="Workers">
           <Key>
@@ -82,6 +93,18 @@
           <Property Name="LastName" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="MiddleName" Type="nvarchar" MaxLength="50" />
         </EntityType>
+        <Association Name="FK_AspNetUsers_AspNetUsers">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1" />
+          <End Role="AspNetUsers1" Type="Self.AspNetUsers" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUsers1">
+              <PropertyRef Name="Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Dishes_Products_Dishes">
           <End Role="Dishes" Type="Self.Dishes" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -124,6 +147,20 @@
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Association Name="FK_Orders_AspNetUsers">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Orders">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
         <Association Name="FK_Orders_Dishes_Dishes">
           <End Role="Dishes" Type="Self.Dishes" Multiplicity="1">
             <OnDelete Action="Cascade" />
@@ -134,7 +171,7 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="Orders_Dishes">
-              <PropertyRef Name="DishId" />
+              <PropertyRef Name="Dish_Id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -145,65 +182,55 @@
           <End Role="Orders_Dishes" Type="Self.Orders_Dishes" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Orders">
-              <PropertyRef Name="Id" />
+              <PropertyRef Name="id" />
             </Principal>
             <Dependent Role="Orders_Dishes">
-              <PropertyRef Name="OrderId" />
+              <PropertyRef Name="Order_Id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Orders_Students">
-          <End Role="Students" Type="Self.Students" Multiplicity="0..1">
+        <Association Name="FK_Users_Benefits_AspNetUsers">
+          <End Role="AspNetUsers" Type="Self.AspNetUsers" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
-          <End Role="Orders" Type="Self.Orders" Multiplicity="*" />
+          <End Role="Users_Benefits" Type="Self.Users_Benefits" Multiplicity="*" />
           <ReferentialConstraint>
-            <Principal Role="Students">
+            <Principal Role="AspNetUsers">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="Orders">
-              <PropertyRef Name="StudentId" />
+            <Dependent Role="Users_Benefits">
+              <PropertyRef Name="User_Id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Students_Benefits_Benefits">
+        <Association Name="FK_Users_Benefits_Benefits">
           <End Role="Benefits" Type="Self.Benefits" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
-          <End Role="Students_Benefits" Type="Self.Students_Benefits" Multiplicity="*" />
+          <End Role="Users_Benefits" Type="Self.Users_Benefits" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Benefits">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="Students_Benefits">
-              <PropertyRef Name="BenefitId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Students_Benefits_Students">
-          <End Role="Students" Type="Self.Students" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="Students_Benefits" Type="Self.Students_Benefits" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Students">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Students_Benefits">
-              <PropertyRef Name="StudentId" />
+            <Dependent Role="Users_Benefits">
+              <PropertyRef Name="Benefit_Id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
         <EntityContainer Name="CanteenModelStoreContainer">
+          <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUsers" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Benefits" EntityType="Self.Benefits" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Dishes" EntityType="Self.Dishes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Dishes_Products" EntityType="Self.Dishes_Products" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Orders" EntityType="Self.Orders" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Orders_Dishes" EntityType="Self.Orders_Dishes" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Products" EntityType="Self.Products" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Students" EntityType="Self.Students" Schema="dbo" store:Type="Tables" />
-          <EntitySet Name="Students_Benefits" EntityType="Self.Students_Benefits" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Users_Benefits" EntityType="Self.Users_Benefits" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="Workers" EntityType="Self.Workers" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK_AspNetUsers_AspNetUsers" Association="Self.FK_AspNetUsers_AspNetUsers">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="AspNetUsers1" EntitySet="AspNetUsers" />
+          </AssociationSet>
           <AssociationSet Name="FK_Dishes_Products_Dishes" Association="Self.FK_Dishes_Products_Dishes">
             <End Role="Dishes" EntitySet="Dishes" />
             <End Role="Dishes_Products" EntitySet="Dishes_Products" />
@@ -216,6 +243,10 @@
             <End Role="Workers" EntitySet="Workers" />
             <End Role="Dishes" EntitySet="Dishes" />
           </AssociationSet>
+          <AssociationSet Name="FK_Orders_AspNetUsers" Association="Self.FK_Orders_AspNetUsers">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="Orders" EntitySet="Orders" />
+          </AssociationSet>
           <AssociationSet Name="FK_Orders_Dishes_Dishes" Association="Self.FK_Orders_Dishes_Dishes">
             <End Role="Dishes" EntitySet="Dishes" />
             <End Role="Orders_Dishes" EntitySet="Orders_Dishes" />
@@ -224,17 +255,13 @@
             <End Role="Orders" EntitySet="Orders" />
             <End Role="Orders_Dishes" EntitySet="Orders_Dishes" />
           </AssociationSet>
-          <AssociationSet Name="FK_Orders_Students" Association="Self.FK_Orders_Students">
-            <End Role="Students" EntitySet="Students" />
-            <End Role="Orders" EntitySet="Orders" />
+          <AssociationSet Name="FK_Users_Benefits_AspNetUsers" Association="Self.FK_Users_Benefits_AspNetUsers">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="Users_Benefits" EntitySet="Users_Benefits" />
           </AssociationSet>
-          <AssociationSet Name="FK_Students_Benefits_Benefits" Association="Self.FK_Students_Benefits_Benefits">
+          <AssociationSet Name="FK_Users_Benefits_Benefits" Association="Self.FK_Users_Benefits_Benefits">
             <End Role="Benefits" EntitySet="Benefits" />
-            <End Role="Students_Benefits" EntitySet="Students_Benefits" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Students_Benefits_Students" Association="Self.FK_Students_Benefits_Students">
-            <End Role="Students" EntitySet="Students" />
-            <End Role="Students_Benefits" EntitySet="Students_Benefits" />
+            <End Role="Users_Benefits" EntitySet="Users_Benefits" />
           </AssociationSet>
         </EntityContainer>
       </Schema>
@@ -242,6 +269,31 @@
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="CanteenModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="AspNetUser">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Email" Type="String" MaxLength="256" FixedLength="false" Unicode="true" />
+          <Property Name="EmailConfirmed" Type="Boolean" Nullable="false" />
+          <Property Name="PasswordHash" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="SecurityStamp" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumber" Type="String" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="PhoneNumberConfirmed" Type="Boolean" Nullable="false" />
+          <Property Name="TwoFactorEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="LockoutEndDateUtc" Type="DateTime" Precision="3" />
+          <Property Name="LockoutEnabled" Type="Boolean" Nullable="false" />
+          <Property Name="AccessFailedCount" Type="Int32" Nullable="false" />
+          <Property Name="UserName" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Budget" Type="Decimal" Precision="18" Scale="0" />
+          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="MiddleName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <NavigationProperty Name="AspNetUsers1" Relationship="Self.FK_AspNetUsers_AspNetUsers" FromRole="AspNetUsers" ToRole="AspNetUsers1" />
+          <NavigationProperty Name="AspNetUser1" Relationship="Self.FK_AspNetUsers_AspNetUsers" FromRole="AspNetUsers1" ToRole="AspNetUsers" />
+          <NavigationProperty Name="Orders" Relationship="Self.FK_Orders_AspNetUsers" FromRole="AspNetUsers" ToRole="Orders" />
+          <NavigationProperty Name="Users_Benefits" Relationship="Self.FK_Users_Benefits_AspNetUsers" FromRole="AspNetUsers" ToRole="Users_Benefits" />
+        </EntityType>
         <EntityType Name="Benefit">
           <Key>
             <PropertyRef Name="Id" />
@@ -249,7 +301,7 @@
           <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="Title" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Discount" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
-          <NavigationProperty Name="Students_Benefits" Relationship="Self.FK_Students_Benefits_Benefits" FromRole="Benefits" ToRole="Students_Benefits" />
+          <NavigationProperty Name="Users_Benefits" Relationship="Self.FK_Users_Benefits_Benefits" FromRole="Benefits" ToRole="Users_Benefits" />
         </EntityType>
         <EntityType Name="Dish">
           <Key>
@@ -275,22 +327,22 @@
         </EntityType>
         <EntityType Name="Order">
           <Key>
-            <PropertyRef Name="Id" />
+            <PropertyRef Name="id" />
           </Key>
-          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="StudentId" Type="Int64" />
+          <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="UserId" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
           <Property Name="Price" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
+          <NavigationProperty Name="AspNetUser" Relationship="Self.FK_Orders_AspNetUsers" FromRole="Orders" ToRole="AspNetUsers" />
           <NavigationProperty Name="Orders_Dishes" Relationship="Self.FK_Orders_Dishes_Orders" FromRole="Orders" ToRole="Orders_Dishes" />
-          <NavigationProperty Name="Student" Relationship="Self.FK_Orders_Students" FromRole="Orders" ToRole="Students" />
         </EntityType>
         <EntityType Name="Orders_Dishes">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="OrderId" Type="Int64" Nullable="false" />
-          <Property Name="DishId" Type="Int64" Nullable="false" />
+          <Property Name="Order_Id" Type="Int64" Nullable="false" />
+          <Property Name="Dish_Id" Type="Int64" Nullable="false" />
           <NavigationProperty Name="Dish" Relationship="Self.FK_Orders_Dishes_Dishes" FromRole="Orders_Dishes" ToRole="Dishes" />
           <NavigationProperty Name="Order" Relationship="Self.FK_Orders_Dishes_Orders" FromRole="Orders_Dishes" ToRole="Orders" />
         </EntityType>
@@ -303,27 +355,15 @@
           <Property Name="EnergyValue" Type="Decimal" Precision="18" Scale="0" />
           <NavigationProperty Name="Dishes_Products" Relationship="Self.FK_Dishes_Products_Products" FromRole="Products" ToRole="Dishes_Products" />
         </EntityType>
-        <EntityType Name="Student">
+        <EntityType Name="Users_Benefits">
           <Key>
             <PropertyRef Name="Id" />
           </Key>
           <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="Budget" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
-          <Property Name="FirstName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="LastName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="MiddleName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
-          <NavigationProperty Name="Orders" Relationship="Self.FK_Orders_Students" FromRole="Students" ToRole="Orders" />
-          <NavigationProperty Name="Students_Benefits" Relationship="Self.FK_Students_Benefits_Students" FromRole="Students" ToRole="Students_Benefits" />
-        </EntityType>
-        <EntityType Name="Students_Benefits">
-          <Key>
-            <PropertyRef Name="Id" />
-          </Key>
-          <Property Name="Id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
-          <Property Name="StudentId" Type="Int64" Nullable="false" />
-          <Property Name="BenefitId" Type="Int64" Nullable="false" />
-          <NavigationProperty Name="Benefit" Relationship="Self.FK_Students_Benefits_Benefits" FromRole="Students_Benefits" ToRole="Benefits" />
-          <NavigationProperty Name="Student" Relationship="Self.FK_Students_Benefits_Students" FromRole="Students_Benefits" ToRole="Students" />
+          <Property Name="User_Id" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Benefit_Id" Type="Int64" Nullable="false" />
+          <NavigationProperty Name="AspNetUser" Relationship="Self.FK_Users_Benefits_AspNetUsers" FromRole="Users_Benefits" ToRole="AspNetUsers" />
+          <NavigationProperty Name="Benefit" Relationship="Self.FK_Users_Benefits_Benefits" FromRole="Users_Benefits" ToRole="Benefits" />
         </EntityType>
         <EntityType Name="Worker">
           <Key>
@@ -335,17 +375,57 @@
           <Property Name="MiddleName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <NavigationProperty Name="Dishes" Relationship="Self.FK_Dishes_Workers" FromRole="Workers" ToRole="Dishes" />
         </EntityType>
-        <Association Name="FK_Students_Benefits_Benefits">
+        <Association Name="FK_AspNetUsers_AspNetUsers">
+          <End Role="AspNetUsers" Type="Self.AspNetUser" Multiplicity="1" />
+          <End Role="AspNetUsers1" Type="Self.AspNetUser" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="AspNetUsers1">
+              <PropertyRef Name="Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Orders_AspNetUsers">
+          <End Role="AspNetUsers" Type="Self.AspNetUser" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Orders" Type="Self.Order" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Orders">
+              <PropertyRef Name="UserId" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Users_Benefits_AspNetUsers">
+          <End Role="AspNetUsers" Type="Self.AspNetUser" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="Users_Benefits" Type="Self.Users_Benefits" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="AspNetUsers">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="Users_Benefits">
+              <PropertyRef Name="User_Id" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_Users_Benefits_Benefits">
           <End Role="Benefits" Type="Self.Benefit" Multiplicity="1">
             <OnDelete Action="Cascade" />
           </End>
-          <End Role="Students_Benefits" Type="Self.Students_Benefits" Multiplicity="*" />
+          <End Role="Users_Benefits" Type="Self.Users_Benefits" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Benefits">
               <PropertyRef Name="Id" />
             </Principal>
-            <Dependent Role="Students_Benefits">
-              <PropertyRef Name="BenefitId" />
+            <Dependent Role="Users_Benefits">
+              <PropertyRef Name="Benefit_Id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -387,7 +467,7 @@
               <PropertyRef Name="Id" />
             </Principal>
             <Dependent Role="Orders_Dishes">
-              <PropertyRef Name="DishId" />
+              <PropertyRef Name="Dish_Id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
@@ -412,54 +492,38 @@
           <End Role="Orders_Dishes" Type="Self.Orders_Dishes" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Orders">
-              <PropertyRef Name="Id" />
+              <PropertyRef Name="id" />
             </Principal>
             <Dependent Role="Orders_Dishes">
-              <PropertyRef Name="OrderId" />
+              <PropertyRef Name="Order_Id" />
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_Orders_Students">
-          <End Role="Students" Type="Self.Student" Multiplicity="0..1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="Orders" Type="Self.Order" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Students">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Orders">
-              <PropertyRef Name="StudentId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <Association Name="FK_Students_Benefits_Students">
-          <End Role="Students" Type="Self.Student" Multiplicity="1">
-            <OnDelete Action="Cascade" />
-          </End>
-          <End Role="Students_Benefits" Type="Self.Students_Benefits" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Students">
-              <PropertyRef Name="Id" />
-            </Principal>
-            <Dependent Role="Students_Benefits">
-              <PropertyRef Name="StudentId" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
-        <EntityContainer Name="CanteenEntities" annotation:LazyLoadingEnabled="true">
+        <EntityContainer Name="Entities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="AspNetUsers" EntityType="Self.AspNetUser" />
           <EntitySet Name="Benefits" EntityType="Self.Benefit" />
           <EntitySet Name="Dishes" EntityType="Self.Dish" />
           <EntitySet Name="Dishes_Products" EntityType="Self.Dishes_Products" />
           <EntitySet Name="Orders" EntityType="Self.Order" />
           <EntitySet Name="Orders_Dishes" EntityType="Self.Orders_Dishes" />
           <EntitySet Name="Products" EntityType="Self.Product" />
-          <EntitySet Name="Students" EntityType="Self.Student" />
-          <EntitySet Name="Students_Benefits" EntityType="Self.Students_Benefits" />
+          <EntitySet Name="Users_Benefits" EntityType="Self.Users_Benefits" />
           <EntitySet Name="Workers" EntityType="Self.Worker" />
-          <AssociationSet Name="FK_Students_Benefits_Benefits" Association="Self.FK_Students_Benefits_Benefits">
+          <AssociationSet Name="FK_AspNetUsers_AspNetUsers" Association="Self.FK_AspNetUsers_AspNetUsers">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="AspNetUsers1" EntitySet="AspNetUsers" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Orders_AspNetUsers" Association="Self.FK_Orders_AspNetUsers">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="Orders" EntitySet="Orders" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Users_Benefits_AspNetUsers" Association="Self.FK_Users_Benefits_AspNetUsers">
+            <End Role="AspNetUsers" EntitySet="AspNetUsers" />
+            <End Role="Users_Benefits" EntitySet="Users_Benefits" />
+          </AssociationSet>
+          <AssociationSet Name="FK_Users_Benefits_Benefits" Association="Self.FK_Users_Benefits_Benefits">
             <End Role="Benefits" EntitySet="Benefits" />
-            <End Role="Students_Benefits" EntitySet="Students_Benefits" />
+            <End Role="Users_Benefits" EntitySet="Users_Benefits" />
           </AssociationSet>
           <AssociationSet Name="FK_Dishes_Products_Dishes" Association="Self.FK_Dishes_Products_Dishes">
             <End Role="Dishes" EntitySet="Dishes" />
@@ -481,21 +545,35 @@
             <End Role="Orders" EntitySet="Orders" />
             <End Role="Orders_Dishes" EntitySet="Orders_Dishes" />
           </AssociationSet>
-          <AssociationSet Name="FK_Orders_Students" Association="Self.FK_Orders_Students">
-            <End Role="Students" EntitySet="Students" />
-            <End Role="Orders" EntitySet="Orders" />
-          </AssociationSet>
-          <AssociationSet Name="FK_Students_Benefits_Students" Association="Self.FK_Students_Benefits_Students">
-            <End Role="Students" EntitySet="Students" />
-            <End Role="Students_Benefits" EntitySet="Students_Benefits" />
-          </AssociationSet>
         </EntityContainer>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
     <edmx:Mappings>
       <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
-        <EntityContainerMapping StorageEntityContainer="CanteenModelStoreContainer" CdmEntityContainer="CanteenEntities">
+        <EntityContainerMapping StorageEntityContainer="CanteenModelStoreContainer" CdmEntityContainer="Entities">
+          <EntitySetMapping Name="AspNetUsers">
+            <EntityTypeMapping TypeName="CanteenModel.AspNetUser">
+              <MappingFragment StoreEntitySet="AspNetUsers">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="Email" ColumnName="Email" />
+                <ScalarProperty Name="EmailConfirmed" ColumnName="EmailConfirmed" />
+                <ScalarProperty Name="PasswordHash" ColumnName="PasswordHash" />
+                <ScalarProperty Name="SecurityStamp" ColumnName="SecurityStamp" />
+                <ScalarProperty Name="PhoneNumber" ColumnName="PhoneNumber" />
+                <ScalarProperty Name="PhoneNumberConfirmed" ColumnName="PhoneNumberConfirmed" />
+                <ScalarProperty Name="TwoFactorEnabled" ColumnName="TwoFactorEnabled" />
+                <ScalarProperty Name="LockoutEndDateUtc" ColumnName="LockoutEndDateUtc" />
+                <ScalarProperty Name="LockoutEnabled" ColumnName="LockoutEnabled" />
+                <ScalarProperty Name="AccessFailedCount" ColumnName="AccessFailedCount" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="Budget" ColumnName="Budget" />
+                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
+                <ScalarProperty Name="LastName" ColumnName="LastName" />
+                <ScalarProperty Name="MiddleName" ColumnName="MiddleName" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
           <EntitySetMapping Name="Benefits">
             <EntityTypeMapping TypeName="CanteenModel.Benefit">
               <MappingFragment StoreEntitySet="Benefits">
@@ -527,8 +605,8 @@
           <EntitySetMapping Name="Orders">
             <EntityTypeMapping TypeName="CanteenModel.Order">
               <MappingFragment StoreEntitySet="Orders">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="StudentId" ColumnName="StudentId" />
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="UserId" ColumnName="UserId" />
                 <ScalarProperty Name="Date" ColumnName="Date" />
                 <ScalarProperty Name="Price" ColumnName="Price" />
               </MappingFragment>
@@ -538,8 +616,8 @@
             <EntityTypeMapping TypeName="CanteenModel.Orders_Dishes">
               <MappingFragment StoreEntitySet="Orders_Dishes">
                 <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="OrderId" ColumnName="OrderId" />
-                <ScalarProperty Name="DishId" ColumnName="DishId" />
+                <ScalarProperty Name="Order_Id" ColumnName="Order_Id" />
+                <ScalarProperty Name="Dish_Id" ColumnName="Dish_Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
@@ -552,23 +630,12 @@
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="Students">
-            <EntityTypeMapping TypeName="CanteenModel.Student">
-              <MappingFragment StoreEntitySet="Students">
+          <EntitySetMapping Name="Users_Benefits">
+            <EntityTypeMapping TypeName="CanteenModel.Users_Benefits">
+              <MappingFragment StoreEntitySet="Users_Benefits">
                 <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="Budget" ColumnName="Budget" />
-                <ScalarProperty Name="FirstName" ColumnName="FirstName" />
-                <ScalarProperty Name="LastName" ColumnName="LastName" />
-                <ScalarProperty Name="MiddleName" ColumnName="MiddleName" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
-          <EntitySetMapping Name="Students_Benefits">
-            <EntityTypeMapping TypeName="CanteenModel.Students_Benefits">
-              <MappingFragment StoreEntitySet="Students_Benefits">
-                <ScalarProperty Name="Id" ColumnName="Id" />
-                <ScalarProperty Name="StudentId" ColumnName="StudentId" />
-                <ScalarProperty Name="BenefitId" ColumnName="BenefitId" />
+                <ScalarProperty Name="User_Id" ColumnName="User_Id" />
+                <ScalarProperty Name="Benefit_Id" ColumnName="Benefit_Id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

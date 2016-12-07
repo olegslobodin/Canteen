@@ -17,7 +17,7 @@ namespace Canteen.Models
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Benefit()
         {
-            this.Students_Benefits = new HashSet<Students_Benefits>();
+            this.Users_Benefits = new HashSet<Users_Benefits>();
         }
     
         public long Id { get; set; }
@@ -25,6 +25,6 @@ namespace Canteen.Models
         public decimal Discount { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Students_Benefits> Students_Benefits { get; set; }
+        public virtual ICollection<Users_Benefits> Users_Benefits { get; set; }
     }
 }

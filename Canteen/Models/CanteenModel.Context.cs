@@ -25,14 +25,14 @@ namespace Canteen.Models
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
         public virtual DbSet<Benefit> Benefits { get; set; }
         public virtual DbSet<Dish> Dishes { get; set; }
         public virtual DbSet<Dishes_Products> Dishes_Products { get; set; }
         public virtual DbSet<Order> Orders { get; set; }
         public virtual DbSet<Orders_Dishes> Orders_Dishes { get; set; }
         public virtual DbSet<Product> Products { get; set; }
-        public virtual DbSet<Student> Students { get; set; }
-        public virtual DbSet<Students_Benefits> Students_Benefits { get; set; }
+        public virtual DbSet<Users_Benefits> Users_Benefits { get; set; }
         public virtual DbSet<Worker> Workers { get; set; }
     }
 }

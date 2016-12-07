@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 using Canteen.Models;
 
 namespace Canteen.Controllers
@@ -37,6 +38,7 @@ namespace Canteen.Controllers
         }
 
         // GET: Dishes/Create
+        [Authorize(Roles = "Admin")]
         public ActionResult Create()
         {
             ViewBag.WorkerId = new SelectList(db.Workers, "Id", "FirstName");
@@ -48,6 +50,7 @@ namespace Canteen.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public ActionResult Create([Bind(Include = "Id,Title,Price,WorkerId")] Dish dish)
         {
             if (ModelState.IsValid)
@@ -62,6 +65,7 @@ namespace Canteen.Controllers
         }
 
         // GET: Dishes/Edit/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Edit(long? id)
         {
             if (id == null)
@@ -82,6 +86,7 @@ namespace Canteen.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public ActionResult Edit([Bind(Include = "Id,Title,Price,WorkerId")] Dish dish)
         {
             if (ModelState.IsValid)
@@ -95,6 +100,7 @@ namespace Canteen.Controllers
         }
 
         // GET: Dishes/Delete/5
+        [Authorize(Roles = "Admin")]
         public ActionResult Delete(long? id)
         {
             if (id == null)
@@ -112,6 +118,7 @@ namespace Canteen.Controllers
         // POST: Dishes/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = "Admin")]
         public ActionResult DeleteConfirmed(long id)
         {
             Dish dish = db.Dishes.Find(id);

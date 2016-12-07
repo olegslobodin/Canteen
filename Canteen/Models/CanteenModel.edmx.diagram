@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="79d2567296b948e1ac1a4456d3fb3527" Name="Diagram1">
+        <EntityTypeShape EntityType="CanteenModel.Benefit" Width="1.5" PointX="0.75" PointY="11" IsExpanded="true" />
+        <EntityTypeShape EntityType="CanteenModel.Dish" Width="1.5" PointX="3" PointY="3.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="CanteenModel.Dishes_Products" Width="1.5" PointX="5.25" PointY="3.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CanteenModel.Order" Width="1.5" PointX="3" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CanteenModel.Orders_Dishes" Width="1.5" PointX="5.25" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CanteenModel.Product" Width="1.5" PointX="3" PointY="0.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="CanteenModel.Student" Width="1.5" PointX="0.75" PointY="7.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="CanteenModel.Students_Benefits" Width="1.5" PointX="3" PointY="10.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="CanteenModel.Worker" Width="1.5" PointX="0.75" PointY="3.75" IsExpanded="true" />
+        <AssociationConnector Association="CanteenModel.FK_Students_Benefits_Benefits" ManuallyRouted="false" />
+        <AssociationConnector Association="CanteenModel.FK_Dishes_Products_Dishes" ManuallyRouted="false" />
+        <AssociationConnector Association="CanteenModel.FK_Dishes_Workers" ManuallyRouted="false" />
+        <AssociationConnector Association="CanteenModel.FK_Orders_Dishes_Dishes" ManuallyRouted="false" />
+        <AssociationConnector Association="CanteenModel.FK_Dishes_Products_Products" ManuallyRouted="false" />
+        <AssociationConnector Association="CanteenModel.FK_Orders_Dishes_Orders" ManuallyRouted="false" />
+        <AssociationConnector Association="CanteenModel.FK_Orders_Students" ManuallyRouted="false" />
+        <AssociationConnector Association="CanteenModel.FK_Students_Benefits_Students" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

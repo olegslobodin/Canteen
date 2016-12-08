@@ -25,6 +25,8 @@ namespace Canteen.Models
             throw new UnintentionalCodeFirstException();
         }
     
+        public virtual DbSet<AspNetRole> AspNetRoles { get; set; }
+        public virtual DbSet<AspNetUserClaim> AspNetUserClaims { get; set; }
         public virtual DbSet<AspNetUser> AspNetUsers { get; set; }
         public virtual DbSet<Benefit> Benefits { get; set; }
         public virtual DbSet<Dish> Dishes { get; set; }
@@ -34,5 +36,6 @@ namespace Canteen.Models
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<Users_Benefits> Users_Benefits { get; set; }
         public virtual DbSet<Worker> Workers { get; set; }
+        public virtual DbSet<AspNetUserLogin> AspNetUserLogins { get; set; }
     }
 }

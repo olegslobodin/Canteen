@@ -1,10 +1,10 @@
-﻿@model IEnumerable<Canteen.Models.Dish>
+﻿@model IEnumerable<Canteen.Models.Product>
 
 @{
     ViewBag.Title = "Index";
 }
 
-<h2>Dishes</h2>
+<h2>Products</h2>
 
 <p>
     @if (Request.IsAuthenticated && User.IsInRole("Admin"))
@@ -18,10 +18,7 @@
             @Html.DisplayNameFor(model => model.Title)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Price)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Worker.FirstName)
+            @Html.DisplayNameFor(model => model.EnergyValue)
         </th>
         <th></th>
     </tr>
@@ -33,18 +30,15 @@
                 @Html.ActionLink(item.Title, "Details", new { id = item.Id })
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Price)
+                @Html.DisplayFor(modelItem => item.EnergyValue)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Worker.FirstName)
-            </td>
-            @if (Request.IsAuthenticated && User.IsInRole("Admin"))
-            {
-                <td>
+                @if (Request.IsAuthenticated && User.IsInRole("Admin"))
+                {
                     @Html.ActionLink("Edit", "Edit", new { id = item.Id })
                     @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-                </td>
-            }
+                }
+            </td>
         </tr>
     }
 

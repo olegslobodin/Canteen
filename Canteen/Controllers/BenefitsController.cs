@@ -6,123 +6,112 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
-using System.Web.Security;
 using Canteen.Models;
 
 namespace Canteen.Controllers
 {
-    public class DishesController : Controller
+    [Authorize(Roles = "Admin")]
+    public class BenefitsController : Controller
     {
         private CanteenEntities db = new CanteenEntities();
 
-        // GET: Dishes
+        // GET: Benefits
         public ActionResult Index()
         {
-            var dishes = db.Dishes.Include(d => d.Worker);
-            return View(dishes.ToList());
+            return View(db.Benefits.ToList());
         }
 
-        // GET: Dishes/Details/5
+        // GET: Benefits/Details/5
         public ActionResult Details(long? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Dish dish = db.Dishes.Find(id);
-            if (dish == null)
+            Benefit benefit = db.Benefits.Find(id);
+            if (benefit == null)
             {
                 return HttpNotFound();
             }
-            return View(dish);
+            return View(benefit);
         }
 
-        // GET: Dishes/Create
-        [Authorize(Roles = "Admin")]
+        // GET: Benefits/Create
         public ActionResult Create()
         {
-            ViewBag.WorkerId = new SelectList(db.Workers, "Id", "FirstName");
             return View();
         }
 
-        // POST: Dishes/Create
+        // POST: Benefits/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
-        public ActionResult Create([Bind(Include = "Id,Title,Price,WorkerId")] Dish dish)
+        public ActionResult Create([Bind(Include = "Id,Title,Discount")] Benefit benefit)
         {
             if (ModelState.IsValid)
             {
-                db.Dishes.Add(dish);
+                db.Benefits.Add(benefit);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            ViewBag.WorkerId = new SelectList(db.Workers, "Id", "FirstName", dish.WorkerId);
-            return View(dish);
+            return View(benefit);
         }
 
-        // GET: Dishes/Edit/5
-        [Authorize(Roles = "Admin")]
+        // GET: Benefits/Edit/5
         public ActionResult Edit(long? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Dish dish = db.Dishes.Find(id);
-            if (dish == null)
+            Benefit benefit = db.Benefits.Find(id);
+            if (benefit == null)
             {
                 return HttpNotFound();
             }
-            ViewBag.WorkerId = new SelectList(db.Workers, "Id", "FirstName", dish.WorkerId);
-            return View(dish);
+            return View(benefit);
         }
 
-        // POST: Dishes/Edit/5
+        // POST: Benefits/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
-        public ActionResult Edit([Bind(Include = "Id,Title,Price,WorkerId")] Dish dish)
+        public ActionResult Edit([Bind(Include = "Id,Title,Discount")] Benefit benefit)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(dish).State = EntityState.Modified;
+                db.Entry(benefit).State = EntityState.Modified;
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            ViewBag.WorkerId = new SelectList(db.Workers, "Id", "FirstName", dish.WorkerId);
-            return View(dish);
+            return View(benefit);
         }
 
-        // GET: Dishes/Delete/5
-        [Authorize(Roles = "Admin")]
+        // GET: Benefits/Delete/5
         public ActionResult Delete(long? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Dish dish = db.Dishes.Find(id);
-            if (dish == null)
+            Benefit benefit = db.Benefits.Find(id);
+            if (benefit == null)
             {
                 return HttpNotFound();
             }
-            return View(dish);
+            return View(benefit);
         }
 
-        // POST: Dishes/Delete/5
+        // POST: Benefits/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        [Authorize(Roles = "Admin")]
         public ActionResult DeleteConfirmed(long id)
         {
-            Dish dish = db.Dishes.Find(id);
-            db.Dishes.Remove(dish);
+            Benefit benefit = db.Benefits.Find(id);
+            db.Benefits.Remove(benefit);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

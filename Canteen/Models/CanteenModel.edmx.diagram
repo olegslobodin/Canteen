@@ -4,17 +4,21 @@
   <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
     <!-- Diagram content (shape and connector positions) -->
     <edmx:Diagrams>
-      <Diagram DiagramId="d98ba121817944b7821268c34a085c9d" Name="Diagram1">
-        <EntityTypeShape EntityType="CanteenModel.AspNetUser" Width="1.5" PointX="0.75" PointY="2.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="CanteenModel.Benefit" Width="1.5" PointX="0.75" PointY="9.25" IsExpanded="true" />
-        <EntityTypeShape EntityType="CanteenModel.Dish" Width="1.5" PointX="3" PointY="12.5" IsExpanded="true" />
-        <EntityTypeShape EntityType="CanteenModel.Dishes_Products" Width="1.5" PointX="5.25" PointY="12.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="CanteenModel.Order" Width="1.5" PointX="3" PointY="3.625" IsExpanded="true" />
-        <EntityTypeShape EntityType="CanteenModel.Orders_Dishes" Width="1.5" PointX="5.25" PointY="3.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="CanteenModel.Product" Width="1.5" PointX="3" PointY="9.875" IsExpanded="true" />
-        <EntityTypeShape EntityType="CanteenModel.Users_Benefits" Width="1.5" PointX="3" PointY="0.75" IsExpanded="true" />
-        <EntityTypeShape EntityType="CanteenModel.Worker" Width="1.5" PointX="0.75" PointY="12.75" IsExpanded="true" />
-        <AssociationConnector Association="CanteenModel.FK_AspNetUsers_AspNetUsers" ManuallyRouted="false" />
+      <Diagram DiagramId="d0a67be805464567aac9649048e69545" Name="Diagram1">
+        <EntityTypeShape EntityType="CanteenModel.AspNetRole" Width="1.5" PointX="0.75" PointY="6.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="CanteenModel.AspNetUserClaim" Width="1.5" PointX="5.25" PointY="3.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="CanteenModel.AspNetUser" Width="1.5" PointX="3" PointY="5.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="CanteenModel.Benefit" Width="1.5" PointX="6" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CanteenModel.Dish" Width="1.5" PointX="5.25" PointY="15.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="CanteenModel.Dishes_Products" Width="1.5" PointX="7.5" PointY="15.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CanteenModel.Order" Width="1.5" PointX="5.25" PointY="6.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="CanteenModel.Orders_Dishes" Width="1.5" PointX="7.5" PointY="6.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CanteenModel.Product" Width="1.5" PointX="5.25" PointY="18.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="CanteenModel.Users_Benefits" Width="1.5" PointX="8.25" PointY="3.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="CanteenModel.Worker" Width="1.5" PointX="3" PointY="15.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="CanteenModel.AspNetUserLogin" Width="1.5" PointX="5.25" PointY="12.25" IsExpanded="true" />
+        <AssociationConnector Association="CanteenModel.FK_dbo_AspNetUserClaims_dbo_AspNetUsers_UserId" ManuallyRouted="false" />
+        <AssociationConnector Association="CanteenModel.FK_dbo_AspNetUserLogins_dbo_AspNetUsers_UserId" ManuallyRouted="false" />
         <AssociationConnector Association="CanteenModel.FK_Orders_AspNetUsers" ManuallyRouted="false" />
         <AssociationConnector Association="CanteenModel.FK_Users_Benefits_AspNetUsers" ManuallyRouted="false" />
         <AssociationConnector Association="CanteenModel.FK_Users_Benefits_Benefits" ManuallyRouted="false" />
@@ -23,6 +27,7 @@
         <AssociationConnector Association="CanteenModel.FK_Orders_Dishes_Dishes" ManuallyRouted="false" />
         <AssociationConnector Association="CanteenModel.FK_Dishes_Products_Products" ManuallyRouted="false" />
         <AssociationConnector Association="CanteenModel.FK_Orders_Dishes_Orders" ManuallyRouted="false" />
+        <AssociationConnector Association="CanteenModel.AspNetUserRoles" ManuallyRouted="false" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

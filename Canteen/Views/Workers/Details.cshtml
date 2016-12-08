@@ -1,4 +1,4 @@
-﻿@model Canteen.Models.Dish
+﻿@model Canteen.Models.Worker
 
 @{
     ViewBag.Title = "Details";
@@ -7,31 +7,31 @@
 <h2>Details</h2>
 
 <div>
-    <h4>Dish</h4>
+    <h4>Worker</h4>
     <hr />
     <dl class="dl-horizontal">
         <dt>
-            @Html.DisplayNameFor(model => model.Title)
+            @Html.DisplayNameFor(model => model.FirstName)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Title)
+            @Html.DisplayFor(model => model.FirstName)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Price)
+            @Html.DisplayNameFor(model => model.LastName)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Price)
+            @Html.DisplayFor(model => model.LastName)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Worker.FirstName)
+            @Html.DisplayNameFor(model => model.MiddleName)
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Worker.FirstName)
+            @Html.DisplayFor(model => model.MiddleName)
         </dd>
 
     </dl>

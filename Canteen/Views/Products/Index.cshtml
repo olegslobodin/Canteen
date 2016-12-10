@@ -36,6 +36,7 @@
                 @if (Request.IsAuthenticated && User.IsInRole("Admin"))
                 {
                     @Html.ActionLink("Edit", "Edit", new { id = item.Id })
+                    <text>|</text>
                     @Html.ActionLink("Delete", "Delete", new { id = item.Id })
                 }
             </td>

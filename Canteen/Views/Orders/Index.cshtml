@@ -18,31 +18,35 @@
         <th>
             @Html.DisplayNameFor(model => model.Price)
         </th>
-        <th>
-            @Html.DisplayNameFor(model => model.AspNetUser.Email)
-        </th>
+        @if (User.IsInRole("Admin"))
+        {
+            <th>
+                @Html.DisplayNameFor(model => model.AspNetUser.Email)
+            </th>
+        }
         <th></th>
     </tr>
 
-@foreach (var item in Model) {
-    <tr>
-        <td>
-            @Html.ActionLink(item.Date.ToString(CultureInfo.InvariantCulture), "Details", new { id = item.id })
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.Price)
-        </td>
-        <td>
-            @Html.DisplayFor(modelItem => item.AspNetUser.Email)
-        </td>
-        @if (Request.IsAuthenticated && User.IsInRole("Admin"))
-        {
+    @foreach (var item in Model)
+    {
+        <tr>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.id })
-                @Html.ActionLink("Delete", "Delete", new { id = item.id })
+                @Html.ActionLink(item.Date.ToString(CultureInfo.InvariantCulture), "Details", new { id = item.id })
             </td>
-        }
-    </tr>
-}
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            @if (User.IsInRole("Admin"))
+            {
+                <td>
+                    @Html.DisplayFor(modelItem => item.AspNetUser.Email)
+                </td>
+                <td>
+                    @Html.ActionLink("Edit", "Edit", new { id = item.id }) |
+                    @Html.ActionLink("Delete", "Delete", new { id = item.id })
+                </td>
+            }
+        </tr>
+    }
 
 </table>

@@ -6,7 +6,10 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.UI.WebControls;
 using Canteen.Models;
+using Canteen.ViewModels;
+using Microsoft.AspNet.Identity;
 
 namespace Canteen.Controllers
 {
@@ -18,7 +21,11 @@ namespace Canteen.Controllers
         // GET: Orders
         public ActionResult Index()
         {
-            var orders = db.Orders.Include(o => o.AspNetUser);
+            var currentUserId = User.Identity.GetUserId();
+
+            var orders = User.IsInRole("Admin") ?
+                db.Orders.Include(o => o.AspNetUser) :
+                db.Orders.Where(o => o.UserId == currentUserId);
             return View(orders.ToList());
         }
 
@@ -37,10 +44,18 @@ namespace Canteen.Controllers
             return View(order);
         }
 
+        public JsonResult GetOrderPrice(List<long> ids)
+        {
+            var price = db.Dishes.Where(d => ids.Contains(d.Id)).Sum(d => d.Price);
+            return Json(new { price });
+        }
+
         // GET: Orders/Create
         public ActionResult Create()
         {
             ViewBag.UserId = new SelectList(db.AspNetUsers, "Id", "Email");
+            ViewBag.Dishes = new MultiSelectList(db.Dishes.Select(dish => new { Value = dish.Id, Text = dish.Title }), "Value", "Text");
+            ViewBag.Budget = db.AspNetUsers.Find(User.Identity.GetUserId()).Budget ?? 0;
             return View();
         }
 
@@ -49,17 +64,47 @@ namespace Canteen.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "id,UserId,Date,Price")] Order order)
+        public ActionResult Create([Bind(Include = "UserId,Date,Price,DishIds")] OrderViewModel orderViewModel)
         {
             if (ModelState.IsValid)
             {
-                db.Orders.Add(order);
-                db.SaveChanges();
-                return RedirectToAction("Index");
+                var order = new Order
+                {
+                    UserId = orderViewModel.UserId,
+                    Date = orderViewModel.Date ?? DateTime.Now,
+                    Price = User.IsInRole("Admin") && orderViewModel.Price.HasValue ?
+                        orderViewModel.Price.Value :
+                        (decimal)db.Dishes.Where(dish => orderViewModel.DishIds.Contains(dish.Id)).Sum(x => x.Price)
+                };
+
+                var user = db.AspNetUsers.Find(order.UserId);
+
+                if (!User.IsInRole("Admin") && (user.Budget ?? 0) < order.Price)
+                {
+                    ViewBag.NotEnoughMoney = true;
+                }
+                else
+                {
+                    db.Orders.Add(order);
+                    db.SaveChanges();
+                    foreach (var dishId in orderViewModel.DishIds)
+                    {
+                        db.Orders_Dishes.Add(new Orders_Dishes { Dish_Id = dishId, Order_Id = order.id });
+                    }
+                    user.Budget -= order.Price;
+                    db.SaveChanges();
+                    return RedirectToAction("Index");
+                }
             }
 
-            ViewBag.UserId = new SelectList(db.AspNetUsers, "Id", "Email", order.UserId);
-            return View(order);
+            ViewBag.UserId = new SelectList(db.AspNetUsers, "Id", "Email", orderViewModel.UserId);
+            ViewBag.Dishes = new MultiSelectList(db.Dishes.Select(dish => new
+            {
+                Value = dish.Id,
+                Text = dish.Title
+            }), "Value", "Text");
+            ViewBag.Budget = db.AspNetUsers.Find(User.Identity.GetUserId()).Budget ?? 0;
+            return View(orderViewModel);
         }
 
         // GET: Orders/Edit/5

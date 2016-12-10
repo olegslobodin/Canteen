@@ -1,4 +1,6 @@
-﻿@model Canteen.Models.Order
+﻿@using Canteen.Models
+@using Microsoft.AspNet.Identity
+@model Canteen.ViewModels.OrderViewModel
 
 @{
     ViewBag.Title = "Create";
@@ -7,34 +9,65 @@
 <h2>Create</h2>
 
 
-@using (Html.BeginForm()) 
+@using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>Order</h4>
+        @if (ViewBag.NotEnoughMoney is bool && (bool)ViewBag.NotEnoughMoney)
+        {
+            <div class="text-danger">You have not enough money!</div>
+        }
+        @if (!User.IsInRole("Admin"))
+        {
+            <div>Your budget is @ViewBag.Budget</div>
+        }
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
         <div class="form-group">
-            @Html.LabelFor(model => model.UserId, "UserId", htmlAttributes: new { @class = "control-label col-md-2" })
+            @Html.LabelFor(model => model.DishIds, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("UserId", null, htmlAttributes: new { @class = "form-control" })
-                @Html.ValidationMessageFor(model => model.UserId, "", new { @class = "text-danger" })
+                @Html.ListBox("DishIds", (MultiSelectList)ViewBag.Dishes, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(model => model.DishIds, "", new { @class = "text-danger" })
             </div>
         </div>
 
-        <div class="form-group">
-            @Html.LabelFor(model => model.Date, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                @Html.EditorFor(model => model.Date, new { htmlAttributes = new { @class = "form-control" } })
-                @Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger" })
+        @if (User.IsInRole("Admin"))
+        {
+            <div class="form-group">
+                @Html.LabelFor(model => model.UserId, "UserId", htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.DropDownList("UserId", null, htmlAttributes: new { @class = "form-control" })
+                    @Html.ValidationMessageFor(model => model.UserId, "", new { @class = "text-danger" })
+                </div>
             </div>
-        </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Date, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Date, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Date, "", new { @class = "text-danger" })
+                </div>
+            </div>
+        }
+        else
+        {
+            @Html.Hidden("UserId", User.Identity.GetUserId())
+        }
 
         <div class="form-group">
             @Html.LabelFor(model => model.Price, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Price, new { htmlAttributes = new { @class = "form-control" } })
+                @if (User.IsInRole("Admin"))
+                {
+                    @Html.EditorFor(model => model.Price, new { htmlAttributes = new { @class = "form-control", id = "price" } })
+                }
+                else
+                {
+                    @Html.EditorFor(model => model.Price, new { htmlAttributes = new { @class = "form-control", id = "price", @readonly = "" } })
+                }
                 @Html.ValidationMessageFor(model => model.Price, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -53,4 +86,5 @@
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/Scripts/CreateOrder.js")
 }

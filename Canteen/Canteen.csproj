@@ -218,6 +218,9 @@
     <Compile Include="Models\Dishes_Products.cs">
       <DependentUpon>CanteenModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\getProductsInDishesHistogram_Result.cs">
+      <DependentUpon>CanteenModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\Order.cs">
@@ -276,6 +279,7 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
+    <Content Include="Scripts\ProductsHistogram.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\_references.js" />

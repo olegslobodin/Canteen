@@ -93,7 +93,7 @@ warning 6002: The table/view 'Canteen.dbo.AspNetUserLogins' does not have a prim
           </Key>
           <Property Name="id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="UserId" Type="nvarchar" MaxLength="256" Nullable="false" />
-          <Property Name="Date" Type="date" Nullable="false" />
+          <Property Name="Date" Type="datetime" Nullable="false" />
           <Property Name="Price" Type="decimal" Precision="18" Scale="0" Nullable="false" />
         </EntityType>
         <EntityType Name="Orders_Dishes">
@@ -297,6 +297,7 @@ warning 6002: The table/view 'Canteen.dbo.AspNetUserLogins' does not have a prim
             </Dependent>
           </ReferentialConstraint>
         </Association>
+        <Function Name="getProductsInDishesHistogram" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo" />
         <EntityContainer Name="CanteenModelStoreContainer">
           <EntitySet Name="AspNetRoles" EntityType="Self.AspNetRoles" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="AspNetUserClaims" EntityType="Self.AspNetUserClaims" Schema="dbo" store:Type="Tables" />
@@ -452,7 +453,7 @@ warning 6002: The table/view 'Canteen.dbo.AspNetUserLogins' does not have a prim
           </Key>
           <Property Name="id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="UserId" Type="String" MaxLength="256" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Date" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="Price" Type="Decimal" Precision="18" Scale="0" Nullable="false" />
           <NavigationProperty Name="AspNetUser" Relationship="Self.FK_Orders_AspNetUsers" FromRole="Orders" ToRole="AspNetUsers" />
           <NavigationProperty Name="Orders_Dishes" Relationship="Self.FK_Orders_Dishes_Orders" FromRole="Orders" ToRole="Orders_Dishes" />
@@ -708,7 +709,12 @@ warning 6002: The table/view 'Canteen.dbo.AspNetUserLogins' does not have a prim
             <End Role="AspNetRoles" EntitySet="AspNetRoles" />
             <End Role="AspNetUsers" EntitySet="AspNetUsers" />
           </AssociationSet>
+          <FunctionImport Name="getProductsInDishesHistogram" ReturnType="Collection(CanteenModel.getProductsInDishesHistogram_Result)" />
         </EntityContainer>
+        <ComplexType Name="getProductsInDishesHistogram_Result">
+          <Property Type="Int64" Name="ProductId" Nullable="false" />
+          <Property Type="Decimal" Name="PersantageInDishes" Nullable="true" Precision="33" Scale="11" />
+        </ComplexType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -847,6 +853,14 @@ warning 6002: The table/view 'Canteen.dbo.AspNetUserLogins' does not have a prim
               <ScalarProperty Name="Id" ColumnName="UserId" />
             </EndProperty>
           </AssociationSetMapping>
+          <FunctionImportMapping FunctionImportName="getProductsInDishesHistogram" FunctionName="CanteenModel.Store.getProductsInDishesHistogram">
+            <ResultMapping>
+              <ComplexTypeMapping TypeName="CanteenModel.getProductsInDishesHistogram_Result">
+                <ScalarProperty Name="ProductId" ColumnName="ProductId" />
+                <ScalarProperty Name="PersantageInDishes" ColumnName="PersantageInDishes" />
+              </ComplexTypeMapping>
+            </ResultMapping>
+          </FunctionImportMapping>
         </EntityContainerMapping>
       </Mapping>
     </edmx:Mappings>

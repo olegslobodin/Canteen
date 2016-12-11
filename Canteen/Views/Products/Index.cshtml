@@ -6,6 +6,10 @@
 
 <h2>Products</h2>
 
+<div class="loader"></div>
+
+<div id="chart_div"></div>
+
 <p>
     @if (Request.IsAuthenticated && User.IsInRole("Admin"))
     {
@@ -44,3 +48,8 @@
     }
 
 </table>
+
+@section Scripts {
+    @Scripts.Render("https://www.gstatic.com/charts/loader.js")
+    @Scripts.Render("~/Scripts/ProductsHistogram.js")
+}

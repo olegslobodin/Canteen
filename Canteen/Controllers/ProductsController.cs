@@ -14,6 +14,15 @@ namespace Canteen.Controllers
     {
         private CanteenEntities db = new CanteenEntities();
 
+        public JsonResult GetHistogram()
+        {
+            return Json(db.getProductsInDishesHistogram().Select(x => new List<string>
+            {
+                db.Products.Find(x.ProductId).Title,
+                x.PersantageInDishes.ToString()
+            }));
+        }
+
         // GET: Products
         public ActionResult Index()
         {

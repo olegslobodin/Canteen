@@ -12,6 +12,8 @@ namespace Canteen.Models
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
+    using System.Data.Entity.Core.Objects;
+    using System.Linq;
     
     public partial class CanteenEntities : DbContext
     {
@@ -37,5 +39,10 @@ namespace Canteen.Models
         public virtual DbSet<Users_Benefits> Users_Benefits { get; set; }
         public virtual DbSet<Worker> Workers { get; set; }
         public virtual DbSet<AspNetUserLogin> AspNetUserLogins { get; set; }
+    
+        public virtual ObjectResult<getProductsInDishesHistogram_Result> getProductsInDishesHistogram()
+        {
+            return ((IObjectContextAdapter)this).ObjectContext.ExecuteFunction<getProductsInDishesHistogram_Result>("getProductsInDishesHistogram");
+        }
     }
 }

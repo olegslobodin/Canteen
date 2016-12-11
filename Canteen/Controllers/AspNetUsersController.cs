@@ -18,7 +18,14 @@ namespace Canteen.Controllers
         // GET: AspNetUsers
         public ActionResult Index()
         {
-            return View(db.AspNetUsers.ToList());
+            try
+            {
+                return View(db.AspNetUsers.ToList());
+            }
+            catch (System.Data.Entity.Core.EntityException)
+            {
+                return RedirectToAction("Index");
+            }
         }
 
         // GET: AspNetUsers/Details/5

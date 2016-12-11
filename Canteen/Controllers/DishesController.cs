@@ -17,8 +17,15 @@ namespace Canteen.Controllers
         // GET: Dishes
         public ActionResult Index()
         {
-            var dishes = db.Dishes.Include(d => d.Worker);
-            return View(dishes.ToList());
+            try
+            {
+                var dishes = db.Dishes.Include(d => d.Worker);
+                return View(dishes.ToList());
+            }
+            catch (System.Data.Entity.Core.EntityException)
+            {
+                return RedirectToAction("Index");
+            }
         }
 
         // GET: Dishes/Details/5

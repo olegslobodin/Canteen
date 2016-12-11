@@ -226,6 +226,7 @@
     <Compile Include="Models\Order.cs">
       <DependentUpon>CanteenModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\OrderFeatures.cs" />
     <Compile Include="Models\Orders_Dishes.cs">
       <DependentUpon>CanteenModel.tt</DependentUpon>
     </Compile>

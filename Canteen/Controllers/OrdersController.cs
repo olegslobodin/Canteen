@@ -21,12 +21,19 @@ namespace Canteen.Controllers
         // GET: Orders
         public ActionResult Index()
         {
-            var currentUserId = User.Identity.GetUserId();
+            try
+            {
+                var currentUserId = User.Identity.GetUserId();
 
-            var orders = User.IsInRole("Admin") ?
-                db.Orders.Include(o => o.AspNetUser) :
-                db.Orders.Where(o => o.UserId == currentUserId);
-            return View(orders.ToList());
+                var orders = User.IsInRole("Admin") ?
+                    db.Orders.Include(o => o.AspNetUser) :
+                    db.Orders.Where(o => o.UserId == currentUserId);
+                return View(orders.ToList());
+            }
+            catch (System.Data.Entity.Core.EntityException)
+            {
+                return RedirectToAction("Index");
+            }
         }
 
         // GET: Orders/Details/5

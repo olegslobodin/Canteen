@@ -17,7 +17,14 @@ namespace Canteen.Controllers
         // GET: Workers
         public ActionResult Index()
         {
-            return View(db.Workers.ToList());
+            try
+            {
+                return View(db.Workers.ToList());
+            }
+            catch (System.Data.Entity.Core.EntityException)
+            {
+                return RedirectToAction("Index");
+            }
         }
 
         // GET: Workers/Details/5

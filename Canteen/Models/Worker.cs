@@ -7,6 +7,8 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
+using System.ComponentModel;
+
 namespace Canteen.Models
 {
     using System;
@@ -21,6 +23,7 @@ namespace Canteen.Models
         }
     
         public long Id { get; set; }
+        [DisplayName("Name")]
         public string FirstName { get; set; }
         public string LastName { get; set; }
         public string MiddleName { get; set; }

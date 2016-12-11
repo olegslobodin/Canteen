@@ -18,7 +18,14 @@ namespace Canteen.Controllers
         // GET: Benefits
         public ActionResult Index()
         {
-            return View(db.Benefits.ToList());
+            try
+            {
+                return View(db.Benefits.ToList());
+            }
+            catch (System.Data.Entity.Core.EntityException)
+            {
+                return RedirectToAction("Index");
+            }
         }
 
         // GET: Benefits/Details/5

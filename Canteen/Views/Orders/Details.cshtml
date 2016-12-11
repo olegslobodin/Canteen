@@ -26,13 +26,35 @@
             @Html.DisplayFor(model => model.Price)
         </dd>
 
+        @if (User.IsInRole("Admin"))
+        {
+            <dt>
+                @Html.DisplayNameFor(model => model.AspNetUser.FirstName)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.AspNetUser.FirstName)
+            </dd>
+
+            <dt>
+                @Html.DisplayNameFor(model => model.AspNetUser.LastName)
+            </dt>
+
+            <dd>
+                @Html.DisplayFor(model => model.AspNetUser.LastName)
+            </dd>
+        }
+
         <dt>
-            @Html.DisplayNameFor(model => model.AspNetUser.Email)
+            @Html.DisplayNameFor(model => model.Dishes)
         </dt>
 
-        <dd>
-            @Html.DisplayFor(model => model.AspNetUser.Email)
-        </dd>
+        @foreach (var dish in Model.Dishes)
+        {
+            <dd>
+                @Html.ActionLink(dish.Title, "Details", "Dishes", new { id = dish.Id }, null)
+            </dd>
+        }
 
     </dl>
 </div>

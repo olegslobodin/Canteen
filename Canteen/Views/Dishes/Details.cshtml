@@ -27,11 +27,11 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.Worker.FirstName)
+            @Html.Raw("Cooked by")
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.Worker.FirstName)
+            @Html.ActionLink(Model.Worker.FirstName, "Details", "Workers", new { id = Model.WorkerId }, null)
         </dd>
 
     </dl>

@@ -42,3 +42,23 @@ textarea {
         transform: rotate(360deg);
     }
 }
+
+.home-container {
+    height: 700px;
+    overflow: hidden;
+}
+
+.my-title-container {
+    margin-top: 150px;
+    font-family: "Comic Sans MS", cursive, sans-serif;
+    text-align: center;
+}
+
+.title-main {
+    font-size: 100px;
+}
+
+.title-sub {
+    font-size: 30px;
+    opacity: 0.5;
+}
